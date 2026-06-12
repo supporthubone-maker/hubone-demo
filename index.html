@@ -8,7 +8,6 @@
   <style>
     :root {
       --bg: #070812;
-      --bg-2: #0e1024;
       --card: rgba(255, 255, 255, 0.08);
       --card-2: rgba(255, 255, 255, 0.12);
       --border: rgba(255, 255, 255, 0.18);
@@ -19,7 +18,6 @@
       --blue: #7aa8ff;
       --green: #76e4b3;
       --red: #ff7c92;
-      --purple: #b18cff;
       --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
       --radius: 28px;
     }
@@ -39,6 +37,7 @@
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
+      width: 100%;
     }
 
     a {
@@ -51,10 +50,7 @@
       margin: 0 auto;
     }
 
-    /* =========================
-       DYNAMIC BACKGROUND
-    ========================= */
-
+    /* BACKGROUND */
     .animated-bg {
       position: fixed;
       inset: 0;
@@ -111,12 +107,8 @@
     }
 
     @keyframes orbFloat {
-      from {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      to {
-        transform: translate3d(40px, -60px, 0) scale(1.12);
-      }
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(40px, -60px, 0) scale(1.12); }
     }
 
     .data-particle {
@@ -152,10 +144,7 @@
       }
     }
 
-    /* =========================
-       NAV
-    ========================= */
-
+    /* NAV */
     .nav {
       position: fixed;
       top: 18px;
@@ -214,18 +203,21 @@
       font-weight: 800;
     }
 
-    /* =========================
-       HERO
-    ========================= */
-
+    /* HERO - FIX FIT SCREEN */
     .hero {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 42px;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.8fr);
+      gap: 36px;
       align-items: center;
       padding: 140px 0 80px;
       position: relative;
+      overflow: hidden;
+    }
+
+    .hero > div:first-child {
+      min-width: 0;
+      max-width: 760px;
     }
 
     .eyebrow {
@@ -257,13 +249,16 @@
     }
 
     h1 {
-      font-size: clamp(46px, 7vw, 88px);
-      line-height: 0.95;
-      letter-spacing: -0.075em;
+      font-size: clamp(42px, 5.6vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -0.065em;
       margin-bottom: 24px;
+      max-width: 760px;
+      overflow-wrap: normal;
     }
 
     .gradient-text {
+      display: inline-block;
       background: linear-gradient(135deg, #ffffff, var(--gold-2), var(--blue));
       -webkit-background-clip: text;
       color: transparent;
@@ -301,12 +296,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,0.35),
-        transparent
-      );
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
       transform: translateX(-120%);
       transition: 0.6s;
     }
@@ -334,6 +324,7 @@
     .live-ticker {
       margin-top: 22px;
       width: 100%;
+      max-width: 720px;
       overflow: hidden;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -365,7 +356,10 @@
     }
 
     .hero-card {
-      min-height: 560px;
+      min-height: 520px;
+      width: 100%;
+      max-width: 520px;
+      justify-self: end;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background:
@@ -520,12 +514,12 @@
 
     .chip-1 {
       top: 110px;
-      right: -22px;
+      right: -10px;
     }
 
     .chip-2 {
       bottom: 90px;
-      left: -28px;
+      left: -10px;
       animation-delay: 1s;
     }
 
@@ -534,10 +528,7 @@
       50% { transform: translateY(-18px); }
     }
 
-    /* =========================
-       GENERAL SECTION
-    ========================= */
-
+    /* SECTION */
     section {
       padding: 90px 0;
     }
@@ -605,12 +596,7 @@
       left: -80%;
       width: 80%;
       height: 240%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,0.14),
-        transparent
-      );
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.14), transparent);
       transform: rotate(18deg);
       transition: 0.8s ease;
     }
@@ -645,10 +631,7 @@
       font-size: 15px;
     }
 
-    /* =========================
-       HOW FLOW
-    ========================= */
-
+    /* HOW */
     .how-flow {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -678,17 +661,9 @@
     }
 
     @keyframes beamFlow {
-      0% {
-        filter: hue-rotate(0deg);
-        opacity: 0.25;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        filter: hue-rotate(40deg);
-        opacity: 0.25;
-      }
+      0% { filter: hue-rotate(0deg); opacity: 0.25; }
+      50% { opacity: 1; }
+      100% { filter: hue-rotate(40deg); opacity: 0.25; }
     }
 
     .step {
@@ -724,10 +699,7 @@
       line-height: 1.55;
     }
 
-    /* =========================
-       DEMO
-    ========================= */
-
+    /* DEMO */
     .demo-wrap {
       display: grid;
       grid-template-columns: 0.9fr 1.1fr;
@@ -821,10 +793,7 @@
       background: rgba(255,124,146,0.13);
     }
 
-    /* =========================
-       PACKAGE
-    ========================= */
-
+    /* PACKAGE */
     .package-card {
       position: relative;
       overflow: hidden;
@@ -862,10 +831,7 @@
       margin-right: 8px;
     }
 
-    /* =========================
-       VALUE
-    ========================= */
-
+    /* VALUE */
     .value-band {
       padding: 44px;
       border-radius: 34px;
@@ -895,10 +861,7 @@
       font-size: 13px;
     }
 
-    /* =========================
-       SCROLL REVEAL
-    ========================= */
-
+    /* REVEAL */
     .reveal {
       opacity: 0;
       transform: translateY(34px);
@@ -910,10 +873,7 @@
       transform: translateY(0);
     }
 
-    /* =========================
-       TOAST
-    ========================= */
-
+    /* TOAST */
     .toast {
       position: fixed;
       right: 24px;
@@ -960,12 +920,34 @@
       line-height: 1.5;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    /* RESPONSIVE */
+    @media (max-width: 1180px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 130px;
+      }
+
+      .hero > div:first-child {
+        max-width: 900px;
+      }
+
+      h1 {
+        max-width: 900px;
+        font-size: clamp(44px, 7vw, 72px);
+      }
+
+      .hero-card {
+        justify-self: center;
+        max-width: 680px;
+        width: 100%;
+      }
+
+      .live-ticker {
+        max-width: 900px;
+      }
+    }
 
     @media (max-width: 980px) {
-      .hero,
       .demo-wrap {
         grid-template-columns: 1fr;
       }
@@ -1016,7 +998,8 @@
       }
 
       h1 {
-        font-size: 46px;
+        font-size: 42px;
+        letter-spacing: -0.05em;
       }
 
       section {
@@ -1027,7 +1010,6 @@
 </head>
 
 <body>
-  <!-- BACKGROUND -->
   <div class="animated-bg">
     <div class="grid-layer"></div>
     <div class="orb orb-1"></div>
@@ -1042,7 +1024,6 @@
     <div class="data-particle p6">⚡</div>
   </div>
 
-  <!-- NAV -->
   <nav class="nav">
     <a href="#" class="brand">
       <div class="brand-mark">H</div>
@@ -1061,7 +1042,6 @@
   </nav>
 
   <main>
-    <!-- HERO -->
     <section class="hero page">
       <div>
         <div class="eyebrow">
@@ -1070,7 +1050,7 @@
         </div>
 
         <h1>
-          Không chỉ xem dữ liệu.
+          Không chỉ xem dữ liệu.<br />
           <span class="gradient-text">Kích hoạt hành động.</span>
         </h1>
 
@@ -1172,7 +1152,6 @@
       </div>
     </section>
 
-    <!-- WHY -->
     <section id="why" class="page">
       <div class="section-head reveal">
         <div class="section-label">Why HubOne</div>
@@ -1204,7 +1183,6 @@
       </div>
     </section>
 
-    <!-- HOW -->
     <section id="how" class="page">
       <div class="section-head reveal">
         <div class="section-label">How it works</div>
@@ -1253,7 +1231,6 @@
       </div>
     </section>
 
-    <!-- USE CASE -->
     <section id="usecase" class="page">
       <div class="section-head reveal">
         <div class="section-label">Use Cases</div>
@@ -1302,7 +1279,6 @@
       </div>
     </section>
 
-    <!-- DEMO -->
     <section id="demo" class="page">
       <div class="section-head reveal">
         <div class="section-label">Demo Experience</div>
@@ -1380,7 +1356,6 @@
       </div>
     </section>
 
-    <!-- PACKAGE -->
     <section id="package" class="page">
       <div class="section-head reveal">
         <div class="section-label">Service Packages</div>
@@ -1429,7 +1404,6 @@
       </div>
     </section>
 
-    <!-- VALUE -->
     <section class="page">
       <div class="value-band reveal">
         <h2>Dashboard chỉ cho bạn thấy điều gì đang xảy ra.<br />HubOne giúp bạn làm điều gì đó với nó.</h2>
@@ -1447,17 +1421,11 @@
   </footer>
 
   <script>
-    // =========================
-    // DEFAULT DEADLINE
-    // =========================
     const deadlineInput = document.getElementById("deadline");
     const d = new Date();
     d.setDate(d.getDate() + 3);
     deadlineInput.value = d.toISOString().split("T")[0];
 
-    // =========================
-    // SEND REQUEST DEMO
-    // =========================
     function sendRequest() {
       const supName = document.getElementById("supName").value;
       const kpiName = document.getElementById("kpiName").value;
@@ -1481,9 +1449,6 @@
       );
     }
 
-    // =========================
-    // CUSTOM TOAST
-    // =========================
     function createToast(title, message) {
       const oldToast = document.querySelector(".toast");
       if (oldToast) oldToast.remove();
@@ -1510,9 +1475,6 @@
       }, 4200);
     }
 
-    // =========================
-    // SCROLL REVEAL
-    // =========================
     const revealItems = document.querySelectorAll(".reveal");
 
     const revealObserver = new IntersectionObserver(
@@ -1524,16 +1486,11 @@
           }
         });
       },
-      {
-        threshold: 0.16
-      }
+      { threshold: 0.16 }
     );
 
     revealItems.forEach(item => revealObserver.observe(item));
 
-    // =========================
-    // COUNTER ANIMATION
-    // =========================
     const counters = document.querySelectorAll(".counter");
 
     const counterObserver = new IntersectionObserver(
@@ -1545,9 +1502,7 @@
           }
         });
       },
-      {
-        threshold: 0.7
-      }
+      { threshold: 0.7 }
     );
 
     counters.forEach(counter => counterObserver.observe(counter));
@@ -1578,9 +1533,6 @@
       requestAnimationFrame(update);
     }
 
-    // =========================
-    // HERO CARD MOUSE PARALLAX
-    // =========================
     const heroCard = document.querySelector(".hero-card");
 
     if (heroCard) {
