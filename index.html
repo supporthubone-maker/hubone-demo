@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HubOne Interactive Intelligence Platform</title>
+
+  <style>
+    :root {
+      --bg: #070812;
+      --bg-2: #0e1024;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-2: rgba(255, 255, 255, 0.12);
+      --border: rgba(255, 255, 255, 0.18);
+      --text: #f5f7ff;
+      --muted: #aab0c5;
+      --gold: #d6b46a;
+      --gold-2: #f2d58a;
+      --blue: #7aa8ff;
+      --green: #76e4b3;
+      --red: #ff7c92;
+      --purple: #b18cff;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* =========================
+       DYNAMIC BACKGROUND
+    ========================= */
+
+    .animated-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      pointer-events: none;
+      background: #070812;
+    }
+
+    .grid-layer {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(circle at center, black 0%, transparent 75%);
+      animation: gridMove 18s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from { transform: translateY(0); }
+      to { transform: translateY(70px); }
+    }
+
+    .orb {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 999px;
+      filter: blur(70px);
+      opacity: 0.5;
+      animation: orbFloat 10s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      top: 5%;
+      left: 5%;
+      background: rgba(214,180,106,0.4);
+    }
+
+    .orb-2 {
+      top: 20%;
+      right: 10%;
+      background: rgba(122,168,255,0.35);
+      animation-delay: 2s;
+    }
+
+    .orb-3 {
+      bottom: 5%;
+      left: 35%;
+      background: rgba(177,140,255,0.32);
+      animation-delay: 4s;
+    }
+
+    @keyframes orbFloat {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(40px, -60px, 0) scale(1.12);
+      }
+    }
+
+    .data-particle {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      animation: particleFloat 9s ease-in-out infinite;
+    }
+
+    .p1 { top: 18%; left: 8%; animation-delay: 0s; }
+    .p2 { top: 38%; left: 3%; animation-delay: 1.2s; }
+    .p3 { top: 70%; left: 12%; animation-delay: 2.4s; }
+    .p4 { top: 22%; right: 7%; animation-delay: 3.1s; }
+    .p5 { top: 58%; right: 5%; animation-delay: 4.2s; }
+    .p6 { bottom: 8%; right: 18%; animation-delay: 5.1s; }
+
+    @keyframes particleFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.75;
+      }
+      50% {
+        transform: translateY(-28px) rotate(7deg);
+        opacity: 1;
+      }
+    }
+
+    /* =========================
+       NAV
+    ========================= */
+
+    .nav {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1180px, calc(100% - 40px));
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(10, 12, 28, 0.65);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #fff1b8);
+      color: #121212;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      box-shadow: 0 8px 30px rgba(214, 180, 106, 0.45);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-2);
+    }
+
+    .nav-cta {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      color: #151515;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 42px;
+      align-items: center;
+      padding: 140px 0 80px;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--gold-2);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 20px var(--green);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+
+    h1 {
+      font-size: clamp(46px, 7vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+      margin-bottom: 24px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff, var(--gold-2), var(--blue));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-weight: 800;
+      transition: 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.35),
+        transparent
+      );
+      transform: translateX(-120%);
+      transition: 0.6s;
+    }
+
+    .btn:hover::after {
+      transform: translateX(120%);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      color: #151515;
+      box-shadow: 0 15px 40px rgba(214, 180, 106, 0.25);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .live-ticker {
+      margin-top: 22px;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(18px);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 18px;
+      width: max-content;
+      padding: 11px 0;
+      animation: tickerMove 24s linear infinite;
+    }
+
+    .ticker-item {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .ticker-item strong {
+      color: var(--gold-2);
+    }
+
+    @keyframes tickerMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .hero-card {
+      min-height: 560px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04));
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(214,180,106,0.23), transparent 65%);
+      top: -160px;
+      right: -160px;
+      animation: floatGlow 6s ease-in-out infinite;
+    }
+
+    @keyframes floatGlow {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-30px, 40px); }
+    }
+
+    .dashboard-mock {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 16px;
+      transform: translateZ(40px);
+    }
+
+    .mock-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mock-title {
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .mock-status {
+      color: var(--green);
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(118, 228, 179, 0.1);
+      border: 1px solid rgba(118, 228, 179, 0.25);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .kpi {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+    }
+
+    .kpi span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .kpi strong {
+      font-size: 26px;
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .positive {
+      color: var(--green);
+    }
+
+    .flow-panel {
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid var(--border);
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .flow-row:last-child {
+      border-bottom: none;
+    }
+
+    .flow-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: rgba(214,180,106,0.16);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .flow-row h4 {
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .flow-row p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--gold-2);
+    }
+
+    .floating-chip {
+      position: absolute;
+      z-index: 4;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(16px);
+      padding: 12px 14px;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .chip-1 {
+      top: 110px;
+      right: -22px;
+    }
+
+    .chip-2 {
+      bottom: 90px;
+      left: -28px;
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    /* =========================
+       GENERAL SECTION
+    ========================= */
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 48px;
+    }
+
+    .section-label {
+      color: var(--gold-2);
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+      margin-bottom: 18px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .problem-grid,
+    .usecase-grid,
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .glass-card {
+      padding: 24px;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      transition: 0.28s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px);
+      background: var(--card-2);
+    }
+
+    .glass-card::after,
+    .package-card::after,
+    .demo-form::after,
+    .demo-log::after {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -80%;
+      width: 80%;
+      height: 240%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.14),
+        transparent
+      );
+      transform: rotate(18deg);
+      transition: 0.8s ease;
+    }
+
+    .glass-card:hover::after,
+    .package-card:hover::after,
+    .demo-form:hover::after,
+    .demo-log:hover::after {
+      left: 130%;
+    }
+
+    .glass-card .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: rgba(214,180,106,0.14);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+    }
+
+    .glass-card h3 {
+      font-size: 21px;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .glass-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* =========================
+       HOW FLOW
+    ========================= */
+
+    .how-flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      position: relative;
+    }
+
+    .how-flow::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 2%;
+      right: 2%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(214,180,106,0.2),
+        rgba(242,213,138,0.9),
+        rgba(122,168,255,0.7),
+        transparent
+      );
+      transform: translateY(-50%);
+      opacity: 0.75;
+      animation: beamFlow 3.8s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes beamFlow {
+      0% {
+        filter: hue-rotate(0deg);
+        opacity: 0.25;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        filter: hue-rotate(40deg);
+        opacity: 0.25;
+      }
+    }
+
+    .step {
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      position: relative;
+      min-height: 180px;
+      backdrop-filter: blur(18px);
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      color: #161616;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      font-size: 17px;
+      margin-bottom: 9px;
+    }
+
+    .step p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* =========================
+       DEMO
+    ========================= */
+
+    .demo-wrap {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .demo-form,
+    .demo-log {
+      padding: 26px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 13px 14px;
+      outline: none;
+      margin-bottom: 16px;
+      font-family: inherit;
+    }
+
+    select option {
+      color: #111;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .demo-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      font-size: 13px;
+    }
+
+    .demo-table th,
+    .demo-table td {
+      padding: 13px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-align: left;
+    }
+
+    .demo-table th {
+      color: var(--gold-2);
+      font-size: 12px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .status {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-block;
+    }
+
+    .status.pending {
+      color: var(--gold-2);
+      background: rgba(214,180,106,0.13);
+    }
+
+    .status.done {
+      color: var(--green);
+      background: rgba(118,228,179,0.13);
+    }
+
+    .status.overdue {
+      color: var(--red);
+      background: rgba(255,124,146,0.13);
+    }
+
+    /* =========================
+       PACKAGE
+    ========================= */
+
+    .package-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .package-card.featured {
+      border-color: rgba(214,180,106,0.5);
+      box-shadow: 0 30px 90px rgba(214,180,106,0.15);
+    }
+
+    .package-name {
+      color: var(--gold-2);
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .package-card h3 {
+      font-size: 28px;
+    }
+
+    .package-card ul {
+      list-style: none;
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .package-card li::before {
+      content: "✓";
+      color: var(--green);
+      font-weight: 900;
+      margin-right: 8px;
+    }
+
+    /* =========================
+       VALUE
+    ========================= */
+
+    .value-band {
+      padding: 44px;
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(214,180,106,0.22), rgba(122,168,255,0.12)),
+        rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .value-band h2 {
+      margin-bottom: 16px;
+    }
+
+    .value-band p {
+      color: var(--muted);
+      max-width: 780px;
+      margin: 0 auto 26px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 40px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* =========================
+       SCROLL REVEAL
+    ========================= */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: 0.75s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 999;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      width: min(420px, calc(100% - 48px));
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(15, 18, 40, 0.82);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      transition: 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .toast-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(118,228,179,0.14);
+    }
+
+    .toast strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+
+    .toast p {
+      color: #aab0c5;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 980px) {
+      .hero,
+      .demo-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-grid,
+      .usecase-grid,
+      .package-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .how-flow {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .how-flow::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .problem-grid,
+      .usecase-grid,
+      .package-grid,
+      .how-flow,
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: auto;
+      }
+
+      .floating-chip,
+      .data-particle {
+        display: none;
+      }
+
+      .nav {
+        width: calc(100% - 24px);
+      }
+
+      .page {
+        width: calc(100% - 24px);
+      }
+
+      h1 {
+        font-size: 46px;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- BACKGROUND -->
+  <div class="animated-bg">
+    <div class="grid-layer"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="data-particle p1">🏪</div>
+    <div class="data-particle p2">📩</div>
+    <div class="data-particle p3">📊</div>
+    <div class="data-particle p4">👤</div>
+    <div class="data-particle p5">🧾</div>
+    <div class="data-particle p6">⚡</div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="brand">
+      <div class="brand-mark">H</div>
+      <span>HubOne</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#why">Why HubOne</a>
+      <a href="#how">How it works</a>
+      <a href="#usecase">Use cases</a>
+      <a href="#package">Packages</a>
+      <a href="#demo">Demo</a>
+    </div>
+
+    <a href="#demo" class="nav-cta">Request Demo</a>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero page">
+      <div>
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Interactive Intelligence Platform
+        </div>
+
+        <h1>
+          Không chỉ xem dữ liệu.
+          <span class="gradient-text">Kích hoạt hành động.</span>
+        </h1>
+
+        <p class="hero-copy">
+          HubOne biến dashboard vận hành thành một không gian tương tác, nơi người dùng có thể phát hiện vấn đề,
+          gửi yêu cầu xử lý, theo dõi phản hồi và đo lường hiệu quả cải thiện theo thời gian.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#how">Explore the Flow →</a>
+          <a class="btn btn-secondary" href="#package">View Packages</a>
+        </div>
+
+        <div class="live-ticker">
+          <div class="ticker-track">
+            <div class="ticker-item">⚡ <strong>REQ-2408</strong> sent to Supervisor</div>
+            <div class="ticker-item">📩 <strong>Mail trigger</strong> completed</div>
+            <div class="ticker-item">🧾 <strong>Response log</strong> updated</div>
+            <div class="ticker-item">📊 <strong>OSA issue</strong> tracked</div>
+            <div class="ticker-item">👤 <strong>Sup response</strong> received</div>
+
+            <div class="ticker-item">⚡ <strong>REQ-2408</strong> sent to Supervisor</div>
+            <div class="ticker-item">📩 <strong>Mail trigger</strong> completed</div>
+            <div class="ticker-item">🧾 <strong>Response log</strong> updated</div>
+            <div class="ticker-item">📊 <strong>OSA issue</strong> tracked</div>
+            <div class="ticker-item">👤 <strong>Sup response</strong> received</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="floating-chip chip-1">📩 Auto Mail Trigger</div>
+        <div class="floating-chip chip-2">🧾 Response History</div>
+
+        <div class="dashboard-mock">
+          <div class="mock-top">
+            <div class="mock-title">KPI Operation Center</div>
+            <div class="mock-status">Live tracking</div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi">
+              <span>OSA</span>
+              <strong class="counter" data-target="92.4">0</strong><strong>%</strong>
+              <p class="negative">▼ -2.1%</p>
+            </div>
+
+            <div class="kpi">
+              <span>OOS Case</span>
+              <strong class="counter" data-target="186">0</strong>
+              <p class="negative">▲ +24</p>
+            </div>
+
+            <div class="kpi">
+              <span>Response SLA</span>
+              <strong class="counter" data-target="78">0</strong><strong>%</strong>
+              <p class="positive">▲ +12%</p>
+            </div>
+          </div>
+
+          <div class="flow-panel">
+            <div class="flow-row">
+              <div class="flow-icon">🔎</div>
+              <div>
+                <h4>Detect Issue</h4>
+                <p>Dashboard phát hiện KPI thấp hơn target.</p>
+              </div>
+              <span class="tag">Auto</span>
+            </div>
+
+            <div class="flow-row">
+              <div class="flow-icon">👤</div>
+              <div>
+                <h4>Select Supervisor</h4>
+                <p>Người dùng chọn đúng Sup cần follow-up.</p>
+              </div>
+              <span class="tag">User action</span>
+            </div>
+
+            <div class="flow-row">
+              <div class="flow-icon">📨</div>
+              <div>
+                <h4>Send Request</h4>
+                <p>Hệ thống tạo Request ID, gửi mail và lưu log.</p>
+              </div>
+              <span class="tag">Trigger</span>
+            </div>
+
+            <div class="flow-row">
+              <div class="flow-icon">📊</div>
+              <div>
+                <h4>Track Response</h4>
+                <p>Phản hồi được cập nhật lại vào dashboard.</p>
+              </div>
+              <span class="tag">History</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section id="why" class="page">
+      <div class="section-head reveal">
+        <div class="section-label">Why HubOne</div>
+        <h2>Dashboard truyền thống chỉ cho biết có vấn đề.</h2>
+        <p class="section-desc">
+          Nhưng trong vận hành thực tế, câu hỏi quan trọng hơn là: ai xử lý, xử lý khi nào,
+          phản hồi ra sao và sau đó KPI có cải thiện hay không?
+        </p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="glass-card reveal">
+          <div class="icon">🧩</div>
+          <h3>Insight bị rời rạc</h3>
+          <p>Dashboard ở một nơi, email ở một nơi, follow-up ở một file khác. Dữ liệu xử lý bị phân mảnh.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">⏳</div>
+          <h3>Follow-up thủ công</h3>
+          <p>Người dùng phải copy KPI, viết mail, nhắc Sup, tổng hợp phản hồi. Dễ sót và tốn thời gian.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">🕳️</div>
+          <h3>Không có lịch sử xử lý</h3>
+          <p>Issue phát sinh nhiều lần nhưng không có nơi lưu lại nguyên nhân, action plan và hiệu quả cải thiện.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW -->
+    <section id="how" class="page">
+      <div class="section-head reveal">
+        <div class="section-label">How it works</div>
+        <h2>Detect → Select → Trigger → Respond → Track → Improve</h2>
+        <p class="section-desc">
+          HubOne biến mỗi insight trên dashboard thành một workflow có thể hành động và theo dõi được.
+        </p>
+      </div>
+
+      <div class="how-flow">
+        <div class="step reveal">
+          <div class="step-number">1</div>
+          <h3>Detect</h3>
+          <p>Phát hiện KPI, shop, SKU hoặc nhân sự có vấn đề.</p>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">2</div>
+          <h3>Select</h3>
+          <p>Chọn Sup, Area, Shop hoặc KPI cần xử lý.</p>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">3</div>
+          <h3>Trigger</h3>
+          <p>Gửi request trực tiếp từ dashboard.</p>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">4</div>
+          <h3>Respond</h3>
+          <p>Sup phản hồi qua form/email response link.</p>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">5</div>
+          <h3>Track</h3>
+          <p>Theo dõi pending, done, overdue và nội dung phản hồi.</p>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">6</div>
+          <h3>Improve</h3>
+          <p>Phân tích lịch sử để cải thiện vận hành dài hạn.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- USE CASE -->
+    <section id="usecase" class="page">
+      <div class="section-head reveal">
+        <div class="section-label">Use Cases</div>
+        <h2>Một nền tảng, nhiều bài toán vận hành.</h2>
+        <p class="section-desc">
+          HubOne có thể mở rộng theo nhiều use case khác nhau: KPI, OSA/OOS, tester, staffing, usage tracking.
+        </p>
+      </div>
+
+      <div class="usecase-grid">
+        <div class="glass-card reveal">
+          <div class="icon">📩</div>
+          <h3>KPI Follow-up</h3>
+          <p>Chọn Sup, chọn KPI, gửi yêu cầu giải trình/action plan và theo dõi phản hồi.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">🛒</div>
+          <h3>OSA / OOS Tracking</h3>
+          <p>Theo dõi không hiện diện, hết hàng, reason, shop, SKU, channel và người phụ trách.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">🧴</div>
+          <h3>Tester Tracking</h3>
+          <p>Kiểm soát tình trạng sản phẩm mẫu thử tại từng door theo report mới nhất.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">👥</div>
+          <h3>Staffing Intelligence</h3>
+          <p>Theo dõi quy mô đội quân, biến động nhân sự, lịch sử làm việc và performance cá nhân.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">📈</div>
+          <h3>Usage Tracking</h3>
+          <p>Đo dashboard có thật sự được sử dụng không: lượt truy cập, action, request, response.</p>
+        </div>
+
+        <div class="glass-card reveal">
+          <div class="icon">🧠</div>
+          <h3>Learning History</h3>
+          <p>Lưu lại use case phát sinh để rút kinh nghiệm, phát hiện issue lặp lại và tối ưu quy trình.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo" class="page">
+      <div class="section-head reveal">
+        <div class="section-label">Demo Experience</div>
+        <h2>Thử flow gửi request ngay trên web.</h2>
+        <p class="section-desc">
+          Đây là demo giả lập để người xem hiểu cách HubOne biến dashboard thành nơi kích hoạt hành động.
+        </p>
+      </div>
+
+      <div class="demo-wrap">
+        <div class="demo-form reveal">
+          <h3 style="margin-bottom: 18px;">Create KPI Request</h3>
+
+          <label>Supervisor</label>
+          <select id="supName">
+            <option>Nguyễn Minh Anh</option>
+            <option>Trần Hoàng Nam</option>
+            <option>Lê Thu Hà</option>
+            <option>Phạm Gia Bảo</option>
+          </select>
+
+          <label>KPI</label>
+          <select id="kpiName">
+            <option>OSA below target</option>
+            <option>OOS case increased</option>
+            <option>Tester needs replacement</option>
+            <option>Sales performance dropped</option>
+          </select>
+
+          <label>Issue Summary</label>
+          <textarea id="issueText">Please review root cause and submit action plan before deadline.</textarea>
+
+          <label>Deadline</label>
+          <input id="deadline" type="date" />
+
+          <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="sendRequest()">
+            Send Request →
+          </button>
+        </div>
+
+        <div class="demo-log reveal">
+          <h3 style="margin-bottom: 18px;">Response History</h3>
+
+          <table class="demo-table">
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Supervisor</th>
+                <th>KPI</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="requestLog">
+              <tr>
+                <td>REQ-2401</td>
+                <td>Nguyễn Minh Anh</td>
+                <td>OSA below target</td>
+                <td><span class="status done">Done</span></td>
+              </tr>
+              <tr>
+                <td>REQ-2402</td>
+                <td>Trần Hoàng Nam</td>
+                <td>OOS case increased</td>
+                <td><span class="status pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>REQ-2403</td>
+                <td>Lê Thu Hà</td>
+                <td>Tester needs replacement</td>
+                <td><span class="status overdue">Overdue</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PACKAGE -->
+    <section id="package" class="page">
+      <div class="section-head reveal">
+        <div class="section-label">Service Packages</div>
+        <h2>Chia gói theo mức độ trưởng thành dữ liệu.</h2>
+        <p class="section-desc">
+          Từ dashboard cơ bản đến interactive operation hub và intelligence platform có thể mở rộng dài hạn.
+        </p>
+      </div>
+
+      <div class="package-grid">
+        <div class="glass-card package-card reveal">
+          <div class="package-name">Package 01</div>
+          <h3>Insight Dashboard</h3>
+          <p>Cho team cần dashboard chuẩn, dễ đọc, có storytelling tốt.</p>
+          <ul>
+            <li>KPI overview</li>
+            <li>Drillthrough detail</li>
+            <li>MTD / YTD / MoM / YoY</li>
+            <li>Basic dashboard usage</li>
+          </ul>
+        </div>
+
+        <div class="glass-card package-card featured reveal">
+          <div class="package-name">Package 02</div>
+          <h3>Interactive Dashboard</h3>
+          <p>Cho team muốn người dùng hành động trực tiếp trên dashboard.</p>
+          <ul>
+            <li>Send mail from dashboard</li>
+            <li>Create request automatically</li>
+            <li>Response form link</li>
+            <li>Request log page</li>
+          </ul>
+        </div>
+
+        <div class="glass-card package-card reveal">
+          <div class="package-name">Package 03</div>
+          <h3>Operation Hub</h3>
+          <p>Cho team muốn quản trị end-to-end issue workflow.</p>
+          <ul>
+            <li>Database request/response</li>
+            <li>SLA tracking</li>
+            <li>Before/after comparison</li>
+            <li>Usage & action tracking</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE -->
+    <section class="page">
+      <div class="value-band reveal">
+        <h2>Dashboard chỉ cho bạn thấy điều gì đang xảy ra.<br />HubOne giúp bạn làm điều gì đó với nó.</h2>
+        <p>
+          Mọi issue, request, phản hồi và hành động đều được lưu lại thành lịch sử vận hành.
+          Từ đó, doanh nghiệp không chỉ xử lý từng case riêng lẻ, mà còn xây dựng được intelligence để cải thiện dài hạn.
+        </p>
+        <a class="btn btn-primary" href="#demo">Start Demo Experience →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Business Analysis Department · HubOne Interactive Intelligence Platform
+  </footer>
+
+  <script>
+    // =========================
+    // DEFAULT DEADLINE
+    // =========================
+    const deadlineInput = document.getElementById("deadline");
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    deadlineInput.value = d.toISOString().split("T")[0];
+
+    // =========================
+    // SEND REQUEST DEMO
+    // =========================
+    function sendRequest() {
+      const supName = document.getElementById("supName").value;
+      const kpiName = document.getElementById("kpiName").value;
+      const requestLog = document.getElementById("requestLog");
+
+      const randomId = "REQ-" + Math.floor(3000 + Math.random() * 6999);
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${randomId}</td>
+        <td>${supName}</td>
+        <td>${kpiName}</td>
+        <td><span class="status pending">Pending</span></td>
+      `;
+
+      requestLog.prepend(row);
+
+      createToast(
+        "Request created",
+        `${randomId} sent to ${supName}. Demo flow: mail trigger + response link + database log.`
+      );
+    }
+
+    // =========================
+    // CUSTOM TOAST
+    // =========================
+    function createToast(title, message) {
+      const oldToast = document.querySelector(".toast");
+      if (oldToast) oldToast.remove();
+
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.innerHTML = `
+        <div class="toast-icon">✅</div>
+        <div>
+          <strong>${title}</strong>
+          <p>${message}</p>
+        </div>
+      `;
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add("show");
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 4200);
+    }
+
+    // =========================
+    // SCROLL REVEAL
+    // =========================
+    const revealItems = document.querySelectorAll(".reveal");
+
+    const revealObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.16
+      }
+    );
+
+    revealItems.forEach(item => revealObserver.observe(item));
+
+    // =========================
+    // COUNTER ANIMATION
+    // =========================
+    const counters = document.querySelectorAll(".counter");
+
+    const counterObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.7
+      }
+    );
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    function animateCounter(counter) {
+      const target = parseFloat(counter.dataset.target);
+      const duration = 1300;
+      const startTime = performance.now();
+
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const value = target * eased;
+
+        if (target % 1 !== 0) {
+          counter.textContent = value.toFixed(1);
+        } else {
+          counter.textContent = Math.floor(value);
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          counter.textContent = target;
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // =========================
+    // HERO CARD MOUSE PARALLAX
+    // =========================
+    const heroCard = document.querySelector(".hero-card");
+
+    if (heroCard) {
+      heroCard.addEventListener("mousemove", e => {
+        const rect = heroCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const rotateY = ((x / rect.width) - 0.5) * 10;
+        const rotateX = ((y / rect.height) - 0.5) * -10;
+
+        heroCard.style.transform = `
+          perspective(1000px)
+          rotateX(${rotateX}deg)
+          rotateY(${rotateY}deg)
+          translateY(-4px)
+        `;
+      });
+
+      heroCard.addEventListener("mouseleave", () => {
+        heroCard.style.transform = `
+          perspective(1000px)
+          rotateX(0deg)
+          rotateY(0deg)
+          translateY(0)
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
